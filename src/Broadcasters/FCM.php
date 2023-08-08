@@ -50,6 +50,8 @@ class FCM extends Broadcaster
                         $payload['description'],
                     ));
                 }
+
+                $service->send($message);
             } catch (Exception $e) {
                 throw new BroadcastException($e);
             }
