@@ -39,7 +39,7 @@ class FCM extends Broadcaster
                 $message = CloudMessage::withTarget('topic', $channel)
                     ->withData([
                         'channel' => $channel,
-                        'data' => $payload['data'],
+                        'data' => isset($payload['data']) ?: null,
                         'event' => $event,
                         'timestamp' => round(now()->valueOf()),
                     ]);
