@@ -3,9 +3,9 @@
 namespace ctf0\Firebase\Broadcasters;
 
 use Exception;
-use Kreait\Firebase\Factory;
-use Illuminate\Broadcasting\BroadcastException;
 use Illuminate\Broadcasting\Broadcasters\Broadcaster;
+use Illuminate\Broadcasting\BroadcastException;
+use Kreait\Firebase\Factory;
 use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification;
 
@@ -14,7 +14,7 @@ class FCM extends Broadcaster
     use Common;
 
     protected $db;
-    
+
     protected $config;
 
     /**
@@ -37,16 +37,19 @@ class FCM extends Broadcaster
         foreach ($this->formatChannels($channels) as $channel) {
             try {
                 $message = CloudMessage::withTarget('topic', $channel)
-                    ->withNotification(Notification::create(
-                        $payload['title'],
-                        $payload['description'],
-                    ))
                     ->withData([
-                        'channel'   => $channel,
-                        'data'      => $payload['data'],
-                        'event'     => $event,
+                        'channel' => $channel,
+                        'data' => $payload['data'],
+                        'event' => $event,
                         'timestamp' => round(now()->valueOf()),
                     ]);
+
+                if (!empty($payload['title']) && !empty($payload['description'])) {
+                    $message->withNotification(Notification::create(
+                        $payload['title'],
+                        $payload['description'],
+                    ));
+                }
             } catch (Exception $e) {
                 throw new BroadcastException($e);
             }
