@@ -18,12 +18,12 @@ class FireBaseBroadcastProvider extends ServiceProvider
         app(BroadcastManager::class)->extend('firebase', function ($app) {
             $config = config('broadcasting.connections.firebase');
 
-            return match ($config['type']) {
-                'database' => new RTDB($config),
-                'messaging' => new FCM($config),
-                'firestore' => new FSDB($config),
-                default => new FSDB($config),
-            };
+            switch($config['type']) {
+                case 'database': return new RTDB($config);
+                case 'messaging': return new FCM($config);
+                case 'firestore': return new FSDB($config);
+                default: return new FSDB($config);
+            }
         });
     }
 
